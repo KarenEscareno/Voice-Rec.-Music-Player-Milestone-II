@@ -1,0 +1,40 @@
+/*
+ * FirstBreadboard.c
+ *
+ * Created: 11/7/2018 22:31:09
+ * Author : karen
+ */ 
+
+#include <avr/io.h>
+#include "usart_ATmega1284.h"
+#include "timer.h"
+#include "spi.h"
+unsigned char Data = 0x00;
+unsigned char SecondD = 0x00;
+unsigned char old = 0xFF;
+unsigned char old2 = 0xFF;
+int main(void)
+{
+    /* Replace with your application code */
+	DDRA = 0xFF; PORTA = 0x00;
+	DDRC = 0xFF; PORTC = 0x00;
+	//unsigned char button = 0x00;
+	//unsigned char send = 0x06;
+	initUSART(0);
+	initUSART(1);
+	TimerOn();
+	TimerSet(500);
+    while (1) 
+    {
+			if(USART_HasReceived(0))
+			{
+					Data = USART_Receive(1);
+          PORTA = Data;
+					SPI_MasterTransmit(Data);
+					USART_Flush(0);
+				
+			}
+		while (!TimerFlag);
+		TimerFlag = 0;
+    }
+}
