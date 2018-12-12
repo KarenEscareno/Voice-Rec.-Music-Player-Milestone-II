@@ -1,0 +1,34 @@
+//TMRpcm library is needed
+
+#include "SD.h"
+#define SD_ChipSelectPin 4
+#include "TMRpcm.h"
+#include "SPI.h"
+#include <SoftwareSerial.h>
+byte Bytes = 0;
+byte Bytess = 0;
+TMRpcm tmrpcm;
+SoftwareSerial Data(2,3);
+void setup()
+{
+tmrpcm.speakerPin=9;
+Serial.begin(9600);
+Data.begin(9600);
+if(!SD.begin(SD_ChipSelectPin))
+{
+  Serial.println("SD fail");
+  return;
+}
+Serial.println("SD Success");
+tmrpcm.setVolume(6);
+tmrpcm.play("Bad.wav");
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+   if(Data.available() > 0) 
+   {
+        Bytes = Data.read();
+        Serial.print(Bytes,HEX);
+    }
